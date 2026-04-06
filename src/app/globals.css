@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --color-canvas: 243 239 230;
+  --color-ink: 18 33 26;
+  --color-accent: 15 118 110;
+  --color-accent-soft: 213 235 232;
+  --color-warning: 180 83 9;
+  --color-danger: 185 28 28;
+  --color-surface: 255 255 255;
+  --color-surface-alt: 248 245 238;
+  --color-border: 18 33 26;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-canvas: 11 18 16;
+  --color-ink: 236 243 240;
+  --color-accent: 56 189 162;
+  --color-accent-soft: 19 49 45;
+  --color-warning: 251 191 36;
+  --color-danger: 248 113 113;
+  --color-surface: 17 26 24;
+  --color-surface-alt: 24 37 34;
+  --color-border: 120 145 138;
+}
+
+body {
+  background:
+    radial-gradient(circle at top left, rgb(var(--color-accent) / 0.16), transparent 28%),
+    linear-gradient(
+      180deg,
+      rgb(var(--color-surface-alt)) 0%,
+      rgb(var(--color-canvas)) 100%
+    );
+}
+
+* {
+  border-color: rgb(var(--color-border) / 0.2);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
