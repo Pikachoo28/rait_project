@@ -21,7 +21,7 @@ interface ThemeContextValue {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
-const isTheme = (value: string | undefined): value is Theme =>
+const isTheme = (value: string | null | undefined): value is Theme =>
   value === "light" || value === "dark";
 
 const applyTheme = (theme: Theme) => {
