@@ -107,10 +107,7 @@ export const MetricsLibraryView = () => {
               <PlusIcon className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/60">
-                Create metric
-              </p>
-              <p className="mt-2 text-2xl font-semibold tracking-tight">Launch guided setup</p>
+              <p className=" text-2xl font-semibold tracking-tight">Create new metric</p>
               <p className="mt-3 text-sm text-white/70">
                 Add thresholds, owners, and alerts through the four-step wizard.
               </p>
