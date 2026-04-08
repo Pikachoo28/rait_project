@@ -50,8 +50,8 @@ export const SelectableChipGroup = <TValue extends string>({
               <span
                 className={`inline-flex rounded-full border px-4 py-2 text-sm font-semibold transition ${
                   selected
-                    ? "border-accent bg-accent text-white"
-                    : "border-border bg-surface text-ink hover:border-accent"
+                    ? "border-sky-500/30 bg-sky-500 text-white shadow-lg shadow-sky-500/20"
+                    : "border-border/25 bg-surfaceAlt/80 text-ink hover:border-sky-500/30"
                 }`}
               >
                 {option.label}

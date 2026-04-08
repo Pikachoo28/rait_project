@@ -1,5 +1,7 @@
 import { WizardStepDefinition } from "@/types/metric";
 
+import { Stepper } from "./Stepper";
+
 interface WizardHeaderProps {
   steps: WizardStepDefinition[];
   currentStepIndex: number;
@@ -13,52 +15,25 @@ export const WizardHeader = ({
   canSelectStep,
   onStepSelect
 }: WizardHeaderProps) => (
-  <div className="space-y-6 rounded-4xl border border-border/40 bg-surface/90 p-6 shadow-panel">
-    <div>
-      <p className="text-sm font-semibold uppercase tracking-[0.22em] text-ink/50">
-        Metric Setup Wizard
+  <div className="space-y-6 rounded-[2.25rem] border border-border/20 bg-surface/90 p-6 shadow-panel">
+    <div className="max-w-3xl">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-ink/45">
+        Guided metric setup
       </p>
-      <h1 className="mt-2 text-3xl font-semibold tracking-tight text-ink">
-        Configure a metric in four steps
+      <h1 className="mt-3 text-3xl font-semibold tracking-tight text-ink md:text-4xl">
+        Build a metric that reads like a dashboard, not a form.
       </h1>
-      <p className="mt-3 max-w-2xl text-sm text-ink/70">
-        The reducer-driven wizard keeps the flow deterministic while validation happens at step
-        boundaries and on final submit.
+      <p className="mt-3 text-sm leading-6 text-ink/68">
+        Move through the four steps to define the metric, shape its threshold behavior, assign the
+        right owners, and review the final dashboard preview before saving.
       </p>
     </div>
 
-    <div className="grid gap-3 md:grid-cols-4">
-      {steps.map((step, index) => {
-        const isActive = index === currentStepIndex;
-        const isComplete = index < currentStepIndex;
-        const isSelectable = canSelectStep(index);
-
-        return (
-          <button
-            key={step.id}
-            type="button"
-            onClick={() => onStepSelect(index)}
-            disabled={!isSelectable}
-            aria-current={isActive ? "step" : undefined}
-            aria-disabled={!isSelectable}
-            className={`rounded-3xl border px-4 py-4 text-left transition ${
-              isActive
-                ? "border-accent bg-accent text-canvas"
-                : isComplete
-                  ? "border-accent/30 bg-accentSoft text-ink"
-                  : "border-border/40 bg-surface text-ink"
-            } ${!isSelectable ? "cursor-not-allowed opacity-60" : ""}`}
-          >
-            <div className="text-xs font-semibold uppercase tracking-[0.2em]">
-              Step {index + 1}
-            </div>
-            <div className="mt-2 text-base font-semibold">{step.title}</div>
-            <div className={`mt-1 text-sm ${isActive ? "text-canvas/85" : "text-ink/60"}`}>
-              {step.description}
-            </div>
-          </button>
-        );
-      })}
-    </div>
+    <Stepper
+      steps={steps}
+      currentStepIndex={currentStepIndex}
+      canSelectStep={canSelectStep}
+      onStepSelect={onStepSelect}
+    />
   </div>
 );

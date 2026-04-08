@@ -4,38 +4,48 @@
 
 :root {
   color-scheme: light;
-  --color-canvas: 243 239 230;
-  --color-ink: 18 33 26;
-  --color-accent: 15 118 110;
-  --color-accent-soft: 213 235 232;
-  --color-warning: 180 83 9;
-  --color-danger: 185 28 28;
+  --color-canvas: 236 242 248;
+  --color-ink: 16 24 40;
+  --color-accent: 14 116 223;
+  --color-accent-soft: 220 233 252;
+  --color-warning: 217 119 6;
+  --color-danger: 220 38 38;
   --color-surface: 255 255 255;
-  --color-surface-alt: 248 245 238;
-  --color-border: 18 33 26;
+  --color-surface-alt: 245 249 255;
+  --color-border: 104 124 148;
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --color-canvas: 11 18 16;
-  --color-ink: 236 243 240;
-  --color-accent: 56 189 162;
-  --color-accent-soft: 19 49 45;
+  --color-canvas: 6 11 21;
+  --color-ink: 232 240 255;
+  --color-accent: 56 189 248;
+  --color-accent-soft: 17 36 64;
   --color-warning: 251 191 36;
   --color-danger: 248 113 113;
-  --color-surface: 17 26 24;
-  --color-surface-alt: 24 37 34;
-  --color-border: 120 145 138;
+  --color-surface: 12 19 33;
+  --color-surface-alt: 17 29 49;
+  --color-border: 98 117 149;
+}
+
+html {
+  font-family: "Segoe UI Variable", "Segoe UI", "Helvetica Neue", sans-serif;
 }
 
 body {
   background:
     radial-gradient(circle at top left, rgb(var(--color-accent) / 0.16), transparent 28%),
+    radial-gradient(circle at top right, rgb(var(--color-warning) / 0.09), transparent 22%),
+    linear-gradient(rgb(var(--color-surface) / 0.55) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--color-surface) / 0.55) 1px, transparent 1px),
     linear-gradient(
       180deg,
       rgb(var(--color-surface-alt)) 0%,
       rgb(var(--color-canvas)) 100%
     );
+  background-size: auto, auto, 40px 40px, 40px 40px, auto;
+  background-position: 0 0, 100% 0, 0 0, 0 0, 0 0;
+  color: rgb(var(--color-ink));
 }
 
 * {
@@ -45,6 +55,32 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+  transition-duration: 180ms;
+  transition-timing-function: ease;
+}
+
+.surface-enter {
+  animation: surface-in 320ms ease-out;
+}
+
+@keyframes surface-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

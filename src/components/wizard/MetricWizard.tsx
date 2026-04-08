@@ -20,6 +20,7 @@ interface MetricWizardProps {
   mode: "create" | "edit";
   initialValues?: MetricFormValues;
   metricId?: string;
+  previewStatus?: MetricStatus;
 }
 
 const METRIC_SUCCESS_TOAST_KEY = "rait-metrics-success-toast";
@@ -27,7 +28,12 @@ const METRIC_SUCCESS_TOAST_KEY = "rait-metrics-success-toast";
 const hasErrors = (values: Record<string, string | undefined>): boolean =>
   Object.keys(values).length > 0;
 
-export const MetricWizard = ({ mode, initialValues, metricId }: MetricWizardProps) => {
+export const MetricWizard = ({
+  mode,
+  initialValues,
+  metricId,
+  previewStatus = "draft"
+}: MetricWizardProps) => {
   const router = useRouter();
   const { saveMetric } = useMetrics();
   const {
@@ -95,42 +101,48 @@ export const MetricWizard = ({ mode, initialValues, metricId }: MetricWizardProp
         onStepSelect={goToStep}
       />
 
-      {currentStep.id === "basic-details" ? (
-        <BasicDetailsStep
-          values={state.values.basicDetails}
-          errors={state.errors.basicDetails}
-          onChange={updateBasicField}
-        />
-      ) : null}
+      <div key={currentStep.id} className="surface-enter">
+        {currentStep.id === "basic-details" ? (
+          <BasicDetailsStep
+            values={state.values.basicDetails}
+            errors={state.errors.basicDetails}
+            onChange={updateBasicField}
+          />
+        ) : null}
 
-      {currentStep.id === "measurement-config" ? (
-        <MeasurementConfigStep
-          values={state.values.measurementConfig}
-          errors={state.errors.measurementConfig}
-          onChange={updateMeasurementField}
-        />
-      ) : null}
+        {currentStep.id === "measurement-config" ? (
+          <MeasurementConfigStep
+            values={state.values.measurementConfig}
+            errors={state.errors.measurementConfig}
+            onChange={updateMeasurementField}
+          />
+        ) : null}
 
-      {currentStep.id === "alerts-ownership" ? (
-        <AlertsOwnershipStep
-          values={state.values.alertsOwnership}
-          errors={state.errors.alertsOwnership}
-          onChange={updateAlertsField}
-        />
-      ) : null}
+        {currentStep.id === "alerts-ownership" ? (
+          <AlertsOwnershipStep
+            values={state.values.alertsOwnership}
+            errors={state.errors.alertsOwnership}
+            onChange={updateAlertsField}
+          />
+        ) : null}
 
-      {currentStep.id === "review-confirm" ? (
-        <ReviewConfirmStep values={state.values} onEditStep={handleReviewEdit} />
-      ) : null}
+        {currentStep.id === "review-confirm" ? (
+          <ReviewConfirmStep
+            values={state.values}
+            previewStatus={previewStatus}
+            onEditStep={handleReviewEdit}
+          />
+        ) : null}
+      </div>
 
       <SectionCard>
         {submissionMessage ? (
           <div
             role={state.submitted && submissionHasErrors ? "alert" : "status"}
-            className={`mb-6 rounded-3xl border px-4 py-3 text-sm ${
+            className={`mb-6 rounded-[1.5rem] border px-4 py-3 text-sm ${
               state.submitted && submissionHasErrors
-                ? "border-danger/20 bg-rose-50 text-danger"
-                : "border-accent/20 bg-accentSoft text-accent"
+                ? "border-danger/20 bg-rose-500/10 text-danger"
+                : "border-sky-500/20 bg-sky-500/10 text-sky-700 dark:text-sky-300"
             }`}
           >
             {submissionMessage}

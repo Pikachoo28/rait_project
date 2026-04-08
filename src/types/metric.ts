@@ -91,6 +91,7 @@ export interface Metric {
   status: MetricStatus;
   createdAt: string;
   updatedAt: string;
+  latestReading?: number | null;
   basicDetails: BasicMetricDetails;
   measurementConfig: MeasurementConfig;
   alertsOwnership: AlertsOwnershipConfig;

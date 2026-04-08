@@ -21,12 +21,12 @@ export const EditMetricView = ({ metricId }: EditMetricViewProps) => {
       <div className="space-y-6">
         <Link
           href="/metrics"
-          className="inline-flex items-center justify-center rounded-full border border-border/40 bg-surface px-4 py-2.5 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent"
+          className="inline-flex items-center justify-center rounded-full border border-border/25 bg-surfaceAlt px-4 py-2.5 text-sm font-semibold text-ink transition hover:border-sky-500/30 hover:text-sky-700 dark:hover:text-sky-300"
         >
           <ArrowLeftIcon className="mr-2 h-4 w-4" />
           Back to metrics
         </Link>
-        <div className="rounded-4xl border border-border/40 bg-surface/90 p-6 shadow-panel">
+        <div className="rounded-[2rem] border border-border/25 bg-surface/90 p-6 shadow-panel">
           <h1 className="text-2xl font-semibold tracking-tight text-ink">Metric not found</h1>
           <p className="mt-3 text-sm text-ink/70">
             The metric you attempted to edit is not available in the current in-memory session.
@@ -40,7 +40,7 @@ export const EditMetricView = ({ metricId }: EditMetricViewProps) => {
     <div className="space-y-6">
       <Link
         href={`/metrics/${metric.id}`}
-        className="inline-flex items-center justify-center rounded-full border border-border/40 bg-surface px-4 py-2.5 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent"
+        className="inline-flex items-center justify-center rounded-full border border-border/25 bg-surfaceAlt px-4 py-2.5 text-sm font-semibold text-ink transition hover:border-sky-500/30 hover:text-sky-700 dark:hover:text-sky-300"
       >
         <ArrowLeftIcon className="mr-2 h-4 w-4" />
         Back to detail
@@ -49,6 +49,7 @@ export const EditMetricView = ({ metricId }: EditMetricViewProps) => {
         mode="edit"
         metricId={metric.id}
         initialValues={mapMetricToFormValues(metric)}
+        previewStatus={metric.status}
       />
     </div>
   );

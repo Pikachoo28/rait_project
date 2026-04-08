@@ -12,7 +12,7 @@ export const MetricStatusToggle = ({ value, onChange }: MetricStatusToggleProps)
 
   return (
     <fieldset>
-      <legend className="mb-2 block text-sm font-medium text-ink">Metric status</legend>
+      <legend className="mb-3 block text-sm font-medium text-ink">Lifecycle status</legend>
       <div className="flex flex-wrap gap-3">
         {metricStatuses.map((status) => {
           const checked = status === value;
@@ -28,10 +28,10 @@ export const MetricStatusToggle = ({ value, onChange }: MetricStatusToggleProps)
                 className="sr-only"
               />
               <span
-                className={`inline-flex rounded-full border px-4 py-2 text-sm font-semibold capitalize transition ${
+                className={`inline-flex rounded-full border px-4 py-2 text-sm font-semibold uppercase tracking-[0.16em] transition ${
                   checked
-                    ? "border-accent bg-accent text-white"
-                    : "border-border bg-surface text-ink hover:border-accent"
+                    ? "border-sky-500/30 bg-sky-500 text-white shadow-lg shadow-sky-500/20"
+                    : "border-border/25 bg-surfaceAlt/80 text-ink/75 hover:border-sky-500/30 hover:text-ink"
                 }`}
               >
                 {status}

@@ -6,6 +6,7 @@ export const mockMetrics: Metric[] = [
     status: "active",
     createdAt: "2026-03-02T08:10:00.000Z",
     updatedAt: "2026-04-03T09:00:00.000Z",
+    latestReading: 0.9,
     basicDetails: {
       name: "Demographic Parity",
       category: "Fairness",
@@ -33,6 +34,7 @@ export const mockMetrics: Metric[] = [
     status: "active",
     createdAt: "2026-02-21T10:30:00.000Z",
     updatedAt: "2026-04-02T11:45:00.000Z",
+    latestReading: 0.76,
     basicDetails: {
       name: "Model Explainability Score",
       category: "Transparency",
@@ -60,6 +62,7 @@ export const mockMetrics: Metric[] = [
     status: "draft",
     createdAt: "2026-03-11T07:15:00.000Z",
     updatedAt: "2026-04-04T06:50:00.000Z",
+    latestReading: 0.84,
     basicDetails: {
       name: "Adversarial Robustness Index",
       category: "Robustness",
@@ -87,6 +90,7 @@ export const mockMetrics: Metric[] = [
     status: "active",
     createdAt: "2026-01-17T14:10:00.000Z",
     updatedAt: "2026-04-01T16:00:00.000Z",
+    latestReading: 0.012,
     basicDetails: {
       name: "PII Exposure Rate",
       category: "Privacy",
@@ -114,6 +118,7 @@ export const mockMetrics: Metric[] = [
     status: "archived",
     createdAt: "2025-12-09T09:05:00.000Z",
     updatedAt: "2026-03-28T13:20:00.000Z",
+    latestReading: 0.99,
     basicDetails: {
       name: "Decision Audit Trail Coverage",
       category: "Accountability",
@@ -141,6 +146,7 @@ export const mockMetrics: Metric[] = [
     status: "active",
     createdAt: "2026-02-06T12:40:00.000Z",
     updatedAt: "2026-04-05T07:25:00.000Z",
+    latestReading: 0.041,
     basicDetails: {
       name: "Hallucination Rate",
       category: "Safety",

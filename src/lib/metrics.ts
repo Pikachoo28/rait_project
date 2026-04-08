@@ -25,6 +25,7 @@ export const buildMetricFromFormValues = (
     status,
     createdAt: existingMetric?.createdAt ?? timestamp,
     updatedAt: timestamp,
+    latestReading: existingMetric?.latestReading ?? null,
     basicDetails: {
       ...values.basicDetails,
       applicableSystemTypes: [...values.basicDetails.applicableSystemTypes]

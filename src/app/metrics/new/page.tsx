@@ -8,7 +8,7 @@ export default function NewMetricPage() {
     <div className="space-y-6">
       <Link
         href="/metrics"
-        className="inline-flex items-center justify-center rounded-full border border-border/40 bg-surface px-4 py-2.5 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent"
+        className="inline-flex items-center justify-center rounded-full border border-border/25 bg-surfaceAlt px-4 py-2.5 text-sm font-semibold text-ink transition hover:border-sky-500/30 hover:text-sky-700 dark:hover:text-sky-300"
       >
         <ArrowLeftIcon className="mr-2 h-4 w-4" />
         Back to metrics

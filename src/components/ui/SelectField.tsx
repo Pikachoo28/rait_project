@@ -45,8 +45,8 @@ export const SelectField = <TValue extends string>({
         aria-describedby={describedBy}
         value={value}
         onChange={(event) => onChange(event.target.value as TValue)}
-        className={`w-full rounded-2xl border bg-surface px-4 py-3 text-sm text-ink outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/20 ${
-          error ? "border-danger" : "border-border/30"
+        className={`w-full rounded-[1.1rem] border bg-surface px-4 py-3 text-sm text-ink outline-none transition duration-200 focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 ${
+          error ? "border-danger/60 bg-rose-500/5" : "border-border/25"
         } ${className}`}
       >
         {options.map((option) => (

@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 
+import { getDirectionLabel, getMetricHealth } from "@/lib/metricHealth";
 import { useMetrics } from "@/context/MetricsContext";
-import { formatThresholdRange } from "@/lib/metrics";
 import { MetricStatus } from "@/types/metric";
 
 import { ArrowLeftIcon } from "@/components/ui/Icons";
@@ -11,10 +11,22 @@ import { SectionCard } from "@/components/ui/SectionCard";
 
 import { MetricStatusToggle } from "./MetricStatusToggle";
 import { StatusBadge } from "./StatusBadge";
+import { ThresholdBar } from "./ThresholdBar";
 
 interface MetricDetailSummaryProps {
   metricId: string;
 }
+
+const statCardStyles = {
+  good:
+    "border-emerald-500/20 bg-gradient-to-br from-emerald-500/12 via-surface to-surface shadow-[0_28px_56px_rgba(16,185,129,0.1)]",
+  warning:
+    "border-amber-500/20 bg-gradient-to-br from-amber-500/12 via-surface to-surface shadow-[0_28px_56px_rgba(245,158,11,0.1)]",
+  critical:
+    "border-rose-500/20 bg-gradient-to-br from-rose-500/12 via-surface to-surface shadow-[0_28px_56px_rgba(244,63,94,0.1)]",
+  neutral:
+    "border-sky-500/20 bg-gradient-to-br from-sky-500/10 via-surface to-surface shadow-[0_28px_56px_rgba(14,165,233,0.08)]"
+} as const;
 
 export const MetricDetailSummary = ({ metricId }: MetricDetailSummaryProps) => {
   const { getMetricById, updateMetricStatus } = useMetrics();
@@ -28,7 +40,7 @@ export const MetricDetailSummary = ({ metricId }: MetricDetailSummaryProps) => {
         </p>
         <Link
           href="/metrics"
-          className="mt-4 inline-flex items-center rounded-full border border-border/40 bg-surface px-4 py-2.5 text-sm font-semibold text-accent transition hover:border-accent"
+          className="mt-4 inline-flex items-center rounded-full border border-border/25 bg-surfaceAlt px-4 py-2.5 text-sm font-semibold text-ink transition hover:border-sky-500/30 hover:text-sky-700 dark:hover:text-sky-300"
         >
           <ArrowLeftIcon className="mr-2 h-4 w-4" />
           Return to the library
@@ -36,6 +48,8 @@ export const MetricDetailSummary = ({ metricId }: MetricDetailSummaryProps) => {
       </SectionCard>
     );
   }
+
+  const health = getMetricHealth(metric);
 
   const handleStatusChange = (status: MetricStatus) => {
     updateMetricStatus(metric.id, status);
@@ -50,198 +64,195 @@ export const MetricDetailSummary = ({ metricId }: MetricDetailSummaryProps) => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 rounded-4xl border border-border/40 bg-surface/90 p-6 shadow-panel lg:flex-row lg:items-start lg:justify-between">
-        <div className="max-w-3xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-ink/50">
-            Metric Detail
-          </p>
-          <div className="mt-3 flex flex-wrap items-center gap-3">
-            <h1 className="text-4xl font-semibold tracking-tight text-ink">
+      <div className="grid gap-6 xl:grid-cols-[1.25fr_0.75fr]">
+        <div
+          className={`relative overflow-hidden rounded-[2.25rem] border p-7 ${statCardStyles[health.tone]}`}
+        >
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-white/30 via-transparent to-transparent dark:from-white/5" />
+          <div className="relative">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div className="inline-flex rounded-full border border-border/20 bg-surfaceAlt/75 px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-ink/65">
+                {getDirectionLabel(metric.measurementConfig.thresholdDirection)}
+              </div>
+              <StatusBadge status={metric.status} />
+            </div>
+
+            <h1 className="mt-5 text-4xl font-semibold tracking-tight text-ink md:text-5xl">
               {metric.basicDetails.name}
             </h1>
-            <StatusBadge status={metric.status} />
+            <div className="mt-3 flex flex-wrap items-center justify-between gap-4 text-sm text-ink/68">
+              <p className="font-medium text-ink/72">{metric.basicDetails.category}</p>
+              <p>{metric.alertsOwnership.owner}</p>
+            </div>
+            <div className="mt-6">
+              <ThresholdBar
+                showDirectionLabel={false}
+                direction={metric.measurementConfig.thresholdDirection}
+                minimumValue={metric.measurementConfig.minimumValue}
+                targetValue={metric.measurementConfig.targetValue}
+                currentValue={health.currentValue}
+                unit={metric.measurementConfig.unit}
+                className="bg-white/50 dark:bg-slate-950/20"
+              />
+            </div>
           </div>
-          <p className="mt-4 text-sm leading-6 text-ink/70">{metric.basicDetails.description}</p>
-          <div className="mt-5 flex flex-wrap gap-6 text-sm text-ink/60">
-            <span>
-              Created <span className="font-medium text-ink">{formatDate(metric.createdAt)}</span>
-            </span>
-            <span>
-              Updated <span className="font-medium text-ink">{formatDate(metric.updatedAt)}</span>
-            </span>
-          </div>
-        </div>
-        <div className="flex gap-3">
-          <Link
-            href="/metrics"
-            className="inline-flex items-center justify-center rounded-full border border-border/40 bg-surface px-5 py-3 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent"
-          >
-            <ArrowLeftIcon className="mr-2 h-4 w-4" />
-            Back to Library
-          </Link>
-          <Link
-            href={`/metrics/${metric.id}/edit`}
-            className="inline-flex items-center justify-center rounded-full bg-ink px-5 py-3 text-sm font-semibold text-canvas transition hover:bg-accent hover:text-canvas"
-          >
-            Edit Metric
-          </Link>
-        </div>
-      </div>
-
-      <div className="grid gap-6 xl:grid-cols-[1.3fr_0.7fr]">
-        <div className="space-y-6">
-          <SectionCard title="Basic Details">
-            <dl className="grid gap-5 text-sm md:grid-cols-2">
-              <div>
-                <dt className="text-ink/50">Metric name</dt>
-                <dd className="mt-1 font-medium text-ink">{metric.basicDetails.name}</dd>
-              </div>
-              <div>
-                <dt className="text-ink/50">Category</dt>
-                <dd className="mt-1 font-medium text-ink">{metric.basicDetails.category}</dd>
-              </div>
-              <div className="md:col-span-2">
-                <dt className="text-ink/50">Description</dt>
-                <dd className="mt-1 font-medium text-ink">
-                  {metric.basicDetails.description || "No description provided"}
-                </dd>
-              </div>
-              <div className="md:col-span-2">
-                <dt className="text-ink/50">Applicable AI system types</dt>
-                <dd className="mt-2 flex flex-wrap gap-2">
-                  {metric.basicDetails.applicableSystemTypes.map((systemType) => (
-                    <span
-                      key={systemType}
-                      className="rounded-full bg-accentSoft px-3 py-1 text-xs font-semibold text-accent"
-                    >
-                      {systemType}
-                    </span>
-                  ))}
-                </dd>
-              </div>
-            </dl>
-          </SectionCard>
-
-          <SectionCard title="Measurement Configuration">
-            <dl className="grid gap-5 text-sm md:grid-cols-2">
-              <div>
-                <dt className="text-ink/50">Data source type</dt>
-                <dd className="mt-1 font-medium text-ink">
-                  {metric.measurementConfig.dataSourceType}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-ink/50">Measurement frequency</dt>
-                <dd className="mt-1 font-medium text-ink">
-                  {metric.measurementConfig.measurementFrequency}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-ink/50">Threshold direction</dt>
-                <dd className="mt-1 font-medium text-ink">
-                  {metric.measurementConfig.thresholdDirection === "higher"
-                    ? "Higher is better"
-                    : "Lower is better"}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-ink/50">Unit of measurement</dt>
-                <dd className="mt-1 font-medium text-ink">{metric.measurementConfig.unit}</dd>
-              </div>
-              <div>
-                <dt className="text-ink/50">
-                  {metric.measurementConfig.thresholdDirection === "higher"
-                    ? "Minimum acceptable value"
-                    : "Maximum acceptable value"}
-                </dt>
-                <dd className="mt-1 font-medium text-ink">
-                  {metric.measurementConfig.minimumValue ?? "Not configured"}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-ink/50">Target value</dt>
-                <dd className="mt-1 font-medium text-ink">
-                  {metric.measurementConfig.targetValue ?? "Not configured"}
-                </dd>
-              </div>
-              <div className="md:col-span-2">
-                <dt className="text-ink/50">Threshold range</dt>
-                <dd className="mt-1 font-medium text-ink">
-                  {formatThresholdRange(
-                    metric.measurementConfig.thresholdDirection,
-                    metric.measurementConfig.minimumValue,
-                    metric.measurementConfig.targetValue,
-                    metric.measurementConfig.unit
-                  )}
-                </dd>
-              </div>
-            </dl>
-          </SectionCard>
-
-          <SectionCard title="Alerts And Ownership">
-            <dl className="grid gap-5 text-sm md:grid-cols-2">
-              <div>
-                <dt className="text-ink/50">Metric owner</dt>
-                <dd className="mt-1 font-medium text-ink">{metric.alertsOwnership.owner}</dd>
-              </div>
-              <div>
-                <dt className="text-ink/50">Escalation policy</dt>
-                <dd className="mt-1 font-medium text-ink">
-                  {metric.alertsOwnership.escalationPolicy}
-                </dd>
-              </div>
-              <div className="md:col-span-2">
-                <dt className="text-ink/50">Alert recipients</dt>
-                <dd className="mt-2 flex flex-wrap gap-2">
-                  {metric.alertsOwnership.alertRecipients.map((recipient) => (
-                    <span
-                      key={recipient}
-                      className="rounded-full bg-canvas px-3 py-1 text-xs font-semibold text-ink"
-                    >
-                      {recipient}
-                    </span>
-                  ))}
-                </dd>
-              </div>
-              <div className="md:col-span-2">
-                <dt className="text-ink/50">Alert conditions</dt>
-                <dd className="mt-2 flex flex-wrap gap-2">
-                  {metric.alertsOwnership.alertConditions.map((condition) => (
-                    <span
-                      key={condition}
-                      className="rounded-full bg-canvas px-3 py-1 text-xs font-semibold text-ink"
-                    >
-                      {condition}
-                    </span>
-                  ))}
-                </dd>
-              </div>
-            </dl>
-          </SectionCard>
         </div>
 
-        <SectionCard title="Status And Actions" className="max-h-fit">
+        <SectionCard title="Actions" description="Control lifecycle state or jump into editing.">
           <MetricStatusToggle value={metric.status} onChange={handleStatusChange} />
-          <div className="mt-6 rounded-3xl bg-canvas/80 p-4 text-sm text-ink/70">
-            Use the toggle above to move this metric between Active, Draft, and Archived without
-            leaving the detail view.
-          </div>
           <div className="mt-6 space-y-3">
             <Link
               href={`/metrics/${metric.id}/edit`}
-              className="inline-flex w-full items-center justify-center rounded-full bg-ink px-5 py-3 text-sm font-semibold text-canvas transition hover:bg-accent hover:text-canvas"
+              className="inline-flex w-full items-center justify-center rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-sky-600"
             >
-              Edit This Metric
+              Edit metric
             </Link>
             <Link
               href="/metrics"
-              className="inline-flex w-full items-center justify-center rounded-full border border-border/40 bg-surface px-5 py-3 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent"
+              className="inline-flex w-full items-center justify-center rounded-full border border-border/25 bg-surfaceAlt px-5 py-3 text-sm font-semibold text-ink transition hover:border-sky-500/30 hover:text-sky-700 dark:hover:text-sky-300"
             >
               <ArrowLeftIcon className="mr-2 h-4 w-4" />
-              Back To Library
+              Back to library
             </Link>
           </div>
+          <div className="mt-6 rounded-[1.5rem] border border-border/20 bg-surfaceAlt/75 p-4 text-sm text-ink/65">
+            Lifecycle status stays editable here without changing any threshold or ownership data.
+          </div>
         </SectionCard>
+      </div>
+
+      <div className="grid gap-6 xl:grid-cols-[1fr_1fr_0.9fr]">
+        <SectionCard title="Metric profile" description="Definition, context, and system coverage.">
+          <dl className="grid gap-5 text-sm">
+            <div>
+              <dt className="text-ink/45">Category</dt>
+              <dd className="mt-1 text-base font-semibold text-ink">
+                {metric.basicDetails.category}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-ink/45">Description</dt>
+              <dd className="mt-1 text-base text-ink/70">{metric.basicDetails.description}</dd>
+            </div>
+            <div>
+              <dt className="text-ink/45">Applicable AI systems</dt>
+              <dd className="mt-3 flex flex-wrap gap-2">
+                {metric.basicDetails.applicableSystemTypes.map((systemType) => (
+                  <span
+                    key={systemType}
+                    className="rounded-full border border-sky-500/20 bg-sky-500/10 px-3 py-1 text-xs font-semibold text-sky-700 dark:text-sky-300"
+                  >
+                    {systemType}
+                  </span>
+                ))}
+              </dd>
+            </div>
+          </dl>
+        </SectionCard>
+
+        <SectionCard
+          title="Measurement design"
+          description="Where the reading comes from and how often it refreshes."
+        >
+          <dl className="grid gap-5 text-sm">
+            <div>
+              <dt className="text-ink/45">Data source</dt>
+              <dd className="mt-1 text-base font-semibold text-ink">
+                {metric.measurementConfig.dataSourceType}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-ink/45">Measurement frequency</dt>
+              <dd className="mt-1 text-base font-semibold text-ink">
+                {metric.measurementConfig.measurementFrequency}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-ink/45">Unit</dt>
+              <dd className="mt-1 text-base font-semibold text-ink">
+                {metric.measurementConfig.unit}
+              </dd>
+            </div>
+          </dl>
+        </SectionCard>
+
+        <SectionCard title="Ownership and alerts" description="People accountable for this metric.">
+          <dl className="grid gap-5 text-sm">
+            <div>
+              <dt className="text-ink/45">Owner</dt>
+              <dd className="mt-1 text-base font-semibold text-ink">
+                {metric.alertsOwnership.owner}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-ink/45">Escalation</dt>
+              <dd className="mt-1 text-base font-semibold text-ink">
+                {metric.alertsOwnership.escalationPolicy}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-ink/45">Alert recipients</dt>
+              <dd className="mt-3 flex flex-wrap gap-2">
+                {metric.alertsOwnership.alertRecipients.map((recipient) => (
+                  <span
+                    key={recipient}
+                    className="rounded-full border border-border/20 bg-surfaceAlt/75 px-3 py-1 text-xs font-semibold text-ink/75"
+                  >
+                    {recipient}
+                  </span>
+                ))}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-ink/45">Conditions</dt>
+              <dd className="mt-3 flex flex-wrap gap-2">
+                {metric.alertsOwnership.alertConditions.map((condition) => (
+                  <span
+                    key={condition}
+                    className="rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-700 dark:text-amber-300"
+                  >
+                    {condition}
+                  </span>
+                ))}
+              </dd>
+            </div>
+          </dl>
+        </SectionCard>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div className="rounded-[1.75rem] border border-border/20 bg-surface/85 p-5 shadow-panel">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-ink/45">
+            Created
+          </p>
+          <p className="mt-2 text-2xl font-semibold tracking-tight text-ink">
+            {formatDate(metric.createdAt)}
+          </p>
+        </div>
+        <div className="rounded-[1.75rem] border border-border/20 bg-surface/85 p-5 shadow-panel">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-ink/45">
+            Updated
+          </p>
+          <p className="mt-2 text-2xl font-semibold tracking-tight text-ink">
+            {formatDate(metric.updatedAt)}
+          </p>
+        </div>
+        <div className="rounded-[1.75rem] border border-border/20 bg-surface/85 p-5 shadow-panel">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-ink/45">
+            Guardrail
+          </p>
+          <p className="mt-2 text-2xl font-semibold tracking-tight text-ink">
+            {metric.measurementConfig.minimumValue ?? "Not set"}
+          </p>
+        </div>
+        <div className="rounded-[1.75rem] border border-border/20 bg-surface/85 p-5 shadow-panel">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-ink/45">
+            Target
+          </p>
+          <p className="mt-2 text-2xl font-semibold tracking-tight text-ink">
+            {metric.measurementConfig.targetValue ?? "Not set"}
+          </p>
+        </div>
       </div>
     </div>
   );

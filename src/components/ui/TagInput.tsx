@@ -71,21 +71,21 @@ export const TagInput = ({
         {required ? <span className="ml-1 text-danger">*</span> : null}
       </label>
       <div
-        className={`rounded-2xl border bg-surface px-3 py-3 ${
-          error || draftError ? "border-danger" : "border-border/30"
+        className={`rounded-[1.1rem] border bg-surface px-3 py-3 ${
+          error || draftError ? "border-danger/60 bg-rose-500/5" : "border-border/25"
         }`}
       >
         <div className="flex flex-wrap gap-2">
           {values.map((value) => (
             <span
               key={value}
-              className="inline-flex items-center gap-2 rounded-full bg-accentSoft px-3 py-1 text-sm font-medium text-accent"
+              className="inline-flex items-center gap-2 rounded-full border border-sky-500/20 bg-sky-500/10 px-3 py-1 text-sm font-medium text-sky-700 dark:text-sky-300"
             >
               {value}
               <button
                 type="button"
                 onClick={() => removeValue(value)}
-                className="text-accent/80 transition hover:text-accent"
+                className="text-sky-700/70 transition hover:text-sky-700 dark:text-sky-300/70 dark:hover:text-sky-300"
                 aria-label={`Remove ${value}`}
               >
                 x
